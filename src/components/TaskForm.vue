@@ -105,11 +105,11 @@
       </button>
       <button
         type="submit"
-        :disabled="loading"
+        :disabled="isLoading"
         class="btn-primary"
       >
-        <LoadingSpinner v-if="loading" size="sm" />
-        <span>{{ isEditing ? 'Update Task' : 'Create Task' }}</span>
+        <LoadingSpinner v-if="isLoading" size="sm" />
+        <span v-if="!isLoading">{{ isEditing ? 'Update Task' : 'Create Task' }}</span>
       </button>
     </div>
   </form>
@@ -155,7 +155,9 @@ const form = reactive<FormData>({
 
 const errors = ref<Partial<FormData>>({});
 const isEditing = ref(false);
+const isLoading = ref(false); 
 const route = useRoute();
+const router = useRouter();
 // Users store
 const usersStore = useUsersStore();
 
@@ -190,28 +192,33 @@ const projectId=Number(props.projectId);
 const handleSubmit = async () => {
   if (!validateForm()) return;
 
-
-   const projectId=Number(props.projectId);
-   
-    const taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'> = {
-      titre: form.title.trim(),
-      description: form.description.trim(),
-      priorite: form.priority as TaskPriority,
-      status: form.status as TaskStatus,
-      project_id: projectId,
-      personne_assignee_id: form.assignedToId || null,
-    };
+  const taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'> = {
+    titre: form.title.trim(),
+    description: form.description.trim(),
+    priorite: form.priority as TaskPriority,
+    status: form.status as TaskStatus,
+    project_id: projectId,
+    personne_assignee_id: form.assignedToId || null,
+  };
 
   try {
-    console.log("taskDatataskDatataskDatataskDatataskDatataskDatataskDatataskDatataskDatataskData",taskData)
-    const createdTask = await tasksStore.storeTask(projectId,taskData);
-    
-  } catch (err) {
-    errors.value.submit = err.response?.data?.message || 'Failed to create task';
-    console.error('Failed to create task:', err);
+    isLoading.value = true; // ✅ start loading
+    if (props.task) {
+      await tasksStore.updateTask(props.task.id, taskData);
+    } else {
+      await tasksStore.storeTask(projectId, taskData);
+    }
+    // redirect after success
+    router.push(`/projects/${projectId}`);
+  } catch (err: any) {
+    errors.value.submit = err.response?.data?.message || 'Failed to save task';
+    console.error('Failed to save task:', err);
+  } finally {
+    isLoading.value = false; // ✅ stop loading
   }
 };
-console.log("props.taskprops.taskprops.taskprops.taskprops.taskprops.taskprops.taskprops.taskprops.taskprops.taskprops.task",props.task)
+
+
 // Watch for task prop changes (for editing)
 watch(() => props.task, (task) => {
   if (task) {

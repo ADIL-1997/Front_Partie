@@ -95,9 +95,9 @@ import LoadingSpinner from '@/components/LoadingSpinner.vue';
 import { ArrowLeftIcon } from '@heroicons/vue/24/outline';
 
 const route = useRoute();
-// const router = useRouter();
+const router = useRouter();
 const projectsStore = useProjectsStore();
-console.log(projectsStore.createProject);
+
 interface FormData {
   title: string;
   description: string;
@@ -120,7 +120,6 @@ const validateForm = (): boolean => {
   errors.value = {};
   
   if (!form.title.trim()) {
-    alert('Project title is required');
     errors.value.title = 'Project title is required';
   }
   
@@ -139,15 +138,14 @@ const handleSubmit = async () => {
       title: form.title.trim(),
       description: form.description.trim(),
     }
-    console.log('isEditing:', isEditing.value);
+    
     if (isEditing.value) {
       await projectsStore.updateProject(projectData.id,projectData);
     } else {
-      alert('Creating project.111..');
       await projectsStore.createProject(projectData);
     }
-    
-    // router.push('/dashboard');
+    // redirect after success
+    router.push('/dashboard');
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'An error occurred';
   }

@@ -57,13 +57,13 @@ export const useProjectsStore = defineStore('projects', () => {
 
   const createProject = async (projectData: { title: string; description: string }): Promise<void> => {
     
-    console.log('Store: entering createProject'); // instead of alert
-    alert('Creating project.. 33333.');
+    console.log('Store: entering createProject'); 
+    
     loading.value = true;
     error.value = null;
   
     try {
-      alert('Creating project.. 44444.');
+      
       // 1️⃣ Get CSRF cookie first (required for Sanctum SPA auth)
       await axios.get('http://localhost:8000/sanctum/csrf-cookie', { withCredentials: true });
   

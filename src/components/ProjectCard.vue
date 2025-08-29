@@ -34,7 +34,7 @@
               <div class="flex ">
                 <button
                   class="bg-red-800  text-white font-bold py-2 px-2 rounded-full"
-                   @click="deleteProject(project.id)"
+                   @click="openDeleteModal(project.id)"
                 >
                   Delete
               </button>
@@ -63,6 +63,37 @@
         Next
       </button>
     </div>
+
+      <!-- Delete Confirmation Modal -->
+      <div
+        v-if="showDeleteModal"
+        class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
+        @click.self="showDeleteModal = false"
+      >
+        <div class="card max-w-md w-full">
+          <h3 class="text-lg font-medium text-gray-900 dark:text-white mb-4">Delete Project</h3>
+          <p class="text-sm text-gray-600 dark:text-gray-400 mb-6">
+            Are you sure you want to delete this project? This action cannot be undone.
+          </p>
+          <div class="flex space-x-3 justify-end">
+            <button
+              @click="showDeleteModal = false"
+              class="btn-secondary"
+            >
+              Cancel
+            </button>
+            <button
+              @click="confirmDelete"
+              :disabled="projectsStore.loading"
+              class="btn-danger flex items-center"
+            >
+              <LoadingSpinner v-if="projectsStore.loading" size="sm" />
+              <span>Delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
   </div>
 </template>
 
@@ -75,6 +106,8 @@ const projectsStore = useProjectsStore();
 const projects = ref(projectsStore.projects);
 const loading = ref(projectsStore.loading);
 const error = ref(projectsStore.error);
+const showDeleteModal = ref(false);
+const projectToDelete = ref<string | null>(null);
 
 // Pagination info
 const pagination = ref({
@@ -83,6 +116,12 @@ const pagination = ref({
   next_page_url: null,
   prev_page_url: null,
 });
+
+// Open modal and set project id
+const openDeleteModal = (id: number) => {
+  projectToDelete.value = id;
+  showDeleteModal.value = true;
+};
 
 const fetchProjects = async (page = 1) => {
   await projectsStore.fetchProjects(page);
@@ -94,13 +133,19 @@ const fetchProjects = async (page = 1) => {
   pagination.value = projectsStore.pagination || pagination.value;
 };
 
+// Confirm and delete
+const confirmDelete = async () => {
+  if (!projectToDelete.value) return;
 
-// Delete a project
-const deleteProject = async (id: number) => {
-  // if (!confirm('Are you sure you want to delete this project?')) return
-  await projectsStore.deleteProject(id)
-  fetchProjects(pagination.value.current_page) // refresh list
-}
+  await projectsStore.deleteProject(projectToDelete.value);
+  showDeleteModal.value = false;
+  projectToDelete.value = null;
+
+  fetchProjects(pagination.value.current_page); // refresh list
+};
+
+
+
 
 
 </script>

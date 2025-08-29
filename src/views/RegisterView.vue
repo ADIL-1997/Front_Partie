@@ -118,7 +118,7 @@ const handleSubmit = async () => {
   error.value = '';
   
   if (form.password !== form.confirmPassword) {
-    alert('Passwords do not match');
+   
     error.value = 'Passwords do not match';
     return;
   }
@@ -129,7 +129,7 @@ const handleSubmit = async () => {
   }
   
   try {
-    alert('Registering...');
+    
     await authStore.register(form.name, form.email, form.password,form.confirmPassword);
     router.push('/dashboard');
   } catch (err) {

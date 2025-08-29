@@ -67,17 +67,31 @@ export const useTasksStore = defineStore('tasks', {
 
     async storeTask(projectId: string | number, taskData: Partial<Task>) {
       try {
+        this.loading = true
         console.log("taskkkkkkkkkk to add",projectId)
         const res = await axios.post(`http://localhost:8000/api/projects/${projectId}/tasks`, taskData)
         this.tasks.push(res.data)
       } catch (err) {
+        this.loading = false
+        console.error('Error creating task:', err)
+      }
+    },
+
+    async updateTask(taskId: string | number, taskData: Partial<Task>) {
+      this.loading = true
+      try {
+        console.log("taskkkkkkkkkk to updaate",taskId)
+        const res = await axios.put(`http://localhost:8000/api/tasks/${taskId}`, taskData)
+        // this.tasks.push(res.data)
+      } catch (err) {
+        this.loading = false
         console.error('Error creating task:', err)
       }
     },
 
     async updateTaskStatus(taskId: string | number, status: TaskStatus) {
       try {
-        alert("hereeeeeeeeeeeee")
+        
         const res = await axios.patch(`http://localhost:8000/api/tasks/${taskId}/status`, { status })
         const idx = this.tasks.findIndex(t => t.id === taskId)
         if (idx !== -1) this.tasks[idx] = res.data
@@ -88,12 +102,14 @@ export const useTasksStore = defineStore('tasks', {
 
     async deleteTask(taskId: string | number) {
       try {
-        alert("deleting task")
+        
         await axios.delete(`http://localhost:8000/api/tasks/${taskId}`)
         this.tasks = this.tasks.filter(t => t.id !== taskId)
       } catch (err) {
         console.error('Error deleting task:', err)
       }
     }
+
+
   }
 })

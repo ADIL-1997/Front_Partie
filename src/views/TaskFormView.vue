@@ -47,21 +47,7 @@ const currentTask = ref<Task | undefined>();
 const projectId = computed(() => route.params.projectId as string);
 const isEditing = computed(() => !!route.params.id);
 
-const handleSubmit = async (taskData: Omit<Task, 'id' | 'createdAt' | 'updatedAt'>) => {
-  try {
-    alert(isEditing.value)
-    if (isEditing.value) {
-      alert("adil")
-      // await tasksStore.updateTask(route.params.id as string, taskData);
-    } else {
-      // await tasksStore.createTask(taskData);
-    }
-    
-    router.push(`/projects/${projectId.value}`);
-  } catch (error) {
-    console.error('Failed to save task:', error);
-  }
-};
+
 
 const handleCancel = () => {
   router.push(`/projects/${projectId.value}`);

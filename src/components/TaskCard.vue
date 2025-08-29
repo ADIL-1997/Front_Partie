@@ -7,7 +7,7 @@
     <!-- Task Header -->
     <div class="flex items-start justify-between mb-3">
       <h3 class="font-medium text-gray-900 dark:text-white text-sm">
-        {{ task.title }} 
+        {{ task.titre }} 
       </h3>
       <div class="flex space-x-1">
         <button
@@ -93,7 +93,7 @@ const emit = defineEmits<{
 const handleStatusChange = (event: Event) => {
   
   const target = event.target as HTMLSelectElement;
-  alert(target.value)
+  
   emit('statusChange', task.id, target.value as TaskStatus);
 };
 
