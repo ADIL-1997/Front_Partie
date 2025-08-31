@@ -19,9 +19,6 @@ export interface Task {
   priorite: TaskPriority;
   personne_assignee_id?: User;
   projectId: Number;
-  createdAt: Date;
-  updatedAt: Date;
-  dueDate?: Date;
 }
 
 export enum TaskStatus {

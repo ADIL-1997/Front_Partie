@@ -19,7 +19,51 @@
       </div>
 
       
+      <!-- Stats -->
+      <div  class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+        <div class="card">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-primary-100 dark:bg-primary-900">
+              <FolderIcon class="h-6 w-6 text-primary-600 dark:text-primary-400" />
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Total Projects</p>
+              <p v-if="projectsStore.projects.length >0" class="text-2xl font-semibold text-gray-900 dark:text-white">
+                {{ !projectsStore.loading ? projectsStore.projects.length : '' }}
+              </p>
+              
+            </div>
+          </div>
+        </div>
 
+        <div class="card">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-emerald-100 dark:bg-emerald-900">
+              <CheckCircleIcon class="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Completed Tasks</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-white">
+                {{ tasksStore.tasksStatistics.completedTasksCount }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="flex items-center">
+            <div class="p-3 rounded-full bg-amber-100 dark:bg-amber-900">
+              <ClockIcon class="h-6 w-6 text-amber-600 dark:text-amber-400" />
+            </div>
+            <div class="ml-4">
+              <p class="text-sm font-medium text-gray-600 dark:text-gray-400">Pending Tasks</p>
+              <p class="text-2xl font-semibold text-gray-900 dark:text-white">
+                {{  tasksStore.tasksStatistics.pendingTasksCount }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- Projects Grid -->
       <div class="mb-6">
         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Your Projects</h2>
@@ -56,6 +100,7 @@ import { ref, computed, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import { useProjectsStore } from '@/stores/projects';
+import { useTasksStore } from '@/stores/tasks';
 import AppLayout from '@/components/AppLayout.vue';
 import ProjectCard from '@/components/ProjectCard.vue';
 import LoadingSpinner from '@/components/LoadingSpinner.vue';
@@ -70,20 +115,13 @@ import {
 
 const authStore = useAuthStore();
 const projectsStore = useProjectsStore();
+const tasksStore = useTasksStore();
 
 
-
-
-
-
-
-
-
-
-
-
-onMounted(() => {
-  projectsStore.fetchProjects();
-  
+onMounted(async () => {
+  await Promise.all([
+    tasksStore.fetchUserTasks_statistics(),
+    projectsStore.fetchProjects()
+  ]);
 });
 </script>

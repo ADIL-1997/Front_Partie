@@ -45,9 +45,12 @@
 
        
        
-
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+            Tasks
+        </h1>
         <!-- Task Boards -->
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          
           <!-- To Do -->
           <div class="card">
             <div class="flex items-center justify-between mb-4">
@@ -73,6 +76,7 @@
                 @delete="handleDeleteTask"
                 @statusChange="handleStatusChange"
                 @dragStart="handleDragStart"
+                :insideProject="true"
                 class="group"
               />
             </div>
@@ -103,6 +107,7 @@
                 @delete="handleDeleteTask"
                 @statusChange="handleStatusChange"
                 @dragStart="handleDragStart"
+                :insideProject="true"
                 class="group"
               />
             </div>
@@ -133,6 +138,7 @@
                 @delete="handleDeleteTask"
                 @statusChange="handleStatusChange"
                 @dragStart="handleDragStart"
+                :insideProject="true"
                 class="group"
               />
             </div>
@@ -199,10 +205,6 @@ const draggedTask = ref<Task | null>(null);
 
 const project = computed(() => projectsStore.currentProject);
 
-const progressPercentage = computed(() => {
-  if (!project.value || project.value.taskCount === 0) return 0;
-  return Math.round((project.value.completedTaskCount / project.value.taskCount) * 100);
-});
 
 const handleEditTask = (taskId: string) => {
   

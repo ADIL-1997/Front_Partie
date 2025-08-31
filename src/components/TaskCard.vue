@@ -9,7 +9,7 @@
       <h3 class="font-medium text-gray-900 dark:text-white text-sm">
         {{ task.titre }} 
       </h3>
-      <div class="flex space-x-1">
+      <div v-if="insideProject" class="flex space-x-1">
         <button
           @click="$emit('edit', task.id)"
           class="text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 p-1"
@@ -60,7 +60,7 @@
       </div>
 
       <!-- Assigned Person -->
-      <div class="flex items-center justify-between">
+      <div v-if="insideProject" class="flex items-center justify-between">
         <span class="text-xs text-gray-500 dark:text-gray-400">Assigned:</span>
         <span class="text-xs text-gray-900 dark:text-white">
           {{ usersStore.availableUsers.find(u => u.id === task.personne_assignee_id)?.name || 'Unassigned'}}
@@ -79,9 +79,10 @@ import { useUsersStore } from '@/stores/users';
 
 interface Props {
   task: Task;
+  insideProject?: boolean;
 }
 
-const { task } = defineProps<Props>();
+const { task,insideProject } = defineProps<Props>();
 
 const emit = defineEmits<{
   edit: [taskId: string];

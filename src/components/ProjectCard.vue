@@ -1,6 +1,6 @@
 <template>
   <div class="p-4">
-    <h2 class="text-2xl font-bold mb-4">Projects</h2>
+    
 
     <div v-if="loading" class="text-gray-500">Loading projects...</div>
     <div v-if="error" class="text-red-500 mb-2">{{ error }}</div>
@@ -49,7 +49,7 @@
     <div class="mt-4 flex justify-center space-x-2">
       <button
         class="px-3 py-1 border rounded hover:bg-gray-100"
-        :disabled="!pagination.prev_page_url"
+        :disabled="!pagination.prev"
         @click="fetchProjects(pagination.current_page - 1)"
       >
         Prev
@@ -57,7 +57,7 @@
       <span class="px-3 py-1 border rounded">{{ pagination.current_page }} / {{ pagination.last_page }}</span>
       <button
         class="px-3 py-1 border rounded hover:bg-gray-100"
-        :disabled="!pagination.next_page_url"
+        :disabled="!pagination.next"
         @click="fetchProjects(pagination.current_page + 1)"
       >
         Next
@@ -113,8 +113,8 @@ const projectToDelete = ref<string | null>(null);
 const pagination = ref({
   current_page: 1,
   last_page: 1,
-  next_page_url: null,
-  prev_page_url: null,
+  next: null,
+  prev: null,
 });
 
 // Open modal and set project id
@@ -130,7 +130,12 @@ const fetchProjects = async (page = 1) => {
   error.value = projectsStore.error;
 
   // Update pagination
-  pagination.value = projectsStore.pagination || pagination.value;
+  pagination.value = {
+    current_page: projectsStore.meta.current_page,
+    last_page: projectsStore.meta.last_page,
+    prev: projectsStore.links.prev,
+    next: projectsStore.links.next,
+  };
 };
 
 // Confirm and delete

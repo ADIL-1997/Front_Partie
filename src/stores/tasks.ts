@@ -6,6 +6,7 @@ import type { Task, TaskStatus } from '@/types'
 export const useTasksStore = defineStore('tasks', {
   state: () => ({
     tasks: [] as Task[],
+    tasksStatistics: { completedTasksCount: '', pendingTasksCount: '' },
     loading: false,
   }),
 
@@ -49,6 +50,30 @@ export const useTasksStore = defineStore('tasks', {
         this.tasks = res.data   // <--- backend returns an array
       } catch (err) {
         console.error('Error fetching tasks:', err)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async fetchUserTasks() {
+      this.loading = true
+      try {
+        const res = await axios.get(`http://localhost:8000/api/userTasks`)
+        this.tasks = res.data   // <--- backend returns an array
+      } catch (err) {
+        console.error('Error fetching tasks:', err)
+      } finally {
+        this.loading = false
+      }
+    },
+
+    async fetchUserTasks_statistics() {
+      this.loading = true
+      try {
+        const res = await axios.get(`http://localhost:8000/api/userTasks_statistic`)
+        this.tasksStatistics  = res.data   // <--- backend returns an array
+      } catch (err) {
+        console.error('Error fetching tasks statistics:', err)
       } finally {
         this.loading = false
       }
