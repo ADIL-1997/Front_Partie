@@ -1,15 +1,27 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Mobile menu button -->
-    <div v-if="!sidebarOpen" class="lg:hidden fixed top-4 left-4 z-50">
-      <button
-        @click="sidebarOpen = !sidebarOpen"
-        class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors"
-      >
-        <Bars3Icon v-if="!sidebarOpen" class="h-6 w-6" />
-        <XMarkIcon v-else class="h-6 w-6" />
-      </button>
-    </div>
+     <!-- Menu button - show when sidebar is closed -->
+  <div v-if="!sidebarOpen" class="lg:hidden fixed top-4 right-4 z-50">
+    <button
+      @click="sidebarOpen = true"
+      class="p-2 rounded-md bg-white shadow-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
+      aria-label="Open sidebar"
+    >
+      <Bars3Icon class="h-6 w-6" />
+    </button>
+  </div>
+
+  <!-- Close button - show when sidebar is open, positioned on the sidebar -->
+  <div v-if="sidebarOpen" class="lg:hidden fixed top-4 right-4 z-50">
+    <button
+      @click="sidebarOpen = false"
+      class="p-2 rounded-md bg-white shadow-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
+      aria-label="Close sidebar"
+    >
+      <XMarkIcon class="h-6 w-6" />
+    </button>
+  </div>
 
     <!-- Sidebar -->
     <div
