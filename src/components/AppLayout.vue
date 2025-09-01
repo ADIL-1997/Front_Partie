@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
     <!-- Mobile menu button -->
-    <div class="lg:hidden fixed top-4 left-4 z-50">
+    <div v-if="!sidebarOpen" class="lg:hidden fixed top-4 left-4 z-50">
       <button
         @click="sidebarOpen = !sidebarOpen"
         class="p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-200 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 transition-colors"
@@ -92,7 +92,7 @@
     </div>
 
     <!-- Main content -->
-    <div class="lg:pl-64">
+    <div class="lg:pl-64 sm:py-6 md:py-6">
       <main class="min-h-screen">
         <slot />
       </main>
